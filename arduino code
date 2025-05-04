@@ -1,0 +1,43 @@
+Arudino Code Automatic Plant Water System
+// Pin configuration
+const int soilMoisturePin = A0;      // Analog input pin for the soil sensor
+const int relayPin = 7;              // Digital output pin to control the relay
+
+// Moisture threshold (tune this based on calibration)
+const int moistureThreshold = 500;   // Below this value, soil is considered dry
+
+void setup() {
+  Serial.begin(9600);               // Start serial communication
+  pinMode(soilMoisturePin, INPUT);  // Set soil moisture pin as input
+  pinMode(relayPin, OUTPUT);        // Set relay pin as output
+  digitalWrite(relayPin, HIGH);     // Turn OFF pump initially (relay is active LOW)
+  Serial.println("Automatic Plant Watering System Initialized");
+}
+
+void loop() {
+  int moistureValue = analogRead(soilMoisturePin);  // Read soil moisture level
+  Serial.print("Soil Moisture Value: ");
+  Serial.println(moistureValue);
+
+  if (moistureValue < moistureThreshold) {
+    Serial.println("Soil is dry. Turning ON water pump.");
+    digitalWrite(relayPin, LOW);  // Turn ON the water pump (active LOW relay)
+  } else {
+    Serial.println("Soil is wet. Turning OFF water pump.");
+    digitalWrite(relayPin, HIGH); // Turn OFF the pump
+  }
+
+  delay(5000); // Wait for 5 seconds before checking again
+}
+
+how to Calibrate
+
+    Open Serial Monitor in the Arduino IDE.
+
+    Watch the moisture sensor value:
+
+        Dry soil might show around 300–400.
+
+        Wet soil could be 700–900+.
+
+    Adjust moistureThreshold based on your soil type and moisture preference (e.g., moistureThreshold = 500).
